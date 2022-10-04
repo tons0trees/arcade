@@ -2,8 +2,9 @@
 const numBoard = [];
 const screenBoard = document.getElementById("screenBoard");
 
-let numCol = 7;
-let numRow = 6;
+const numCol = 7;
+const numRow = 6;
+const winLength = 4;
 
 for (let i=0; i<numCol; i++) {
     numBoard.push([]);
@@ -58,3 +59,56 @@ screenBoard.addEventListener('click', function(event) {
         currentPlayer = 1;
     }
 })
+
+//The win function takes the column that was last played in and checks if that token won the game.
+function checkWin(currentCol) {
+    const currentRow = numBoard[currentCol].length-1;
+    const checkPlayer = numBoard[currentCol][currentRow];
+
+    let count = 1;
+    
+    //Check Down
+    for (let i=1; i<winLength; i++) {
+        if (numBoard[currentCol][currentRow-i]===checkPlayer) {
+            count++;
+            // console.log(count);
+        } else {
+            count = 1;
+            break;
+        }
+        if (count >= winLength) {
+            return true;
+        }
+    }
+
+    //check horizontal
+    //check left first, carrying count to the right check without reseting
+    count = 1;
+    for (let i=1; i<winLength; i++) {
+        if (numBoard[currentCol-i][currentRow]===checkPlayer) {
+            count++;
+            console.log(`Cell:${currentCol-i},${currentRow} Count:${count}`)
+        } else {
+            break;
+        }
+        if (count >= winLength) {
+            return true;
+        }
+    }
+    console.log('checking right')
+    for (let i=1; i<winLength; i++) {
+        if (numBoard[currentCol+i][currentRow]===checkPlayer) {
+            count++;
+            console.log(`Cell:${currentCol+i},${currentRow} Count:${count}`);
+        } else {
+            break
+        }
+        if (count >= winLength) {
+            return true;
+        }
+    }
+
+    //check diagonal up
+    count = 1;
+    return false;
+}
