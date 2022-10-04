@@ -68,14 +68,17 @@ screenBoard.addEventListener('click', function(event) {
         clickedCol = event.target.parentElement;
     }
 
-    //this sucks theres got to be a better way to know which sibling an element is
     const numCol = Array.from(clickedCol.parentElement.children).indexOf(clickedCol);
 
     if(playInColumn(numCol)) {
-        if (currentPlayer === 1) {
-            currentPlayer = 2;
-        } else if (currentPlayer === 2) {
-            currentPlayer = 1;
+        if (checkWin(numCol)) {
+            console.log(`Player ${currentPlayer} wins!!!`)
+        } else {
+            if (currentPlayer === 1) {
+                currentPlayer = 2;
+            } else if (currentPlayer === 2) {
+                currentPlayer = 1;
+            }
         }
         updateBoard();
     }
