@@ -1,28 +1,55 @@
 //the board array is going to store the board state in array of columns from left to right each column holding cells bottom to top (ie. board[0][0] represents the bottom cell in the left column.) The array will hold either 0, 1, or 2 representing unused, player1 and player2.
-const numBoard = [];
-const screenBoard = document.getElementById("screenBoard");
-const playerDisplay = document.getElementById("currentPlayer");
-
-const numCol = 7;
-const numRow = 6;
+let numBoard = [];
+let numCol = 7;
+let numRow = 6;
 const winLength = 4;
 let currentPlayer = 1;
 
-for (let i=0; i<numCol; i++) {
-    numBoard.push([]);
-    const newCol = document.createElement('div');
-    newCol.classList.add('column');
-    screenBoard.appendChild(newCol);
+const screenBoard = document.getElementById("screenBoard");
+const playerDisplay = document.getElementById("currentPlayer");
+const quitButton = document.getElementById('quitGame')
+const menuPopup = document.getElementById('menuPopup');
+const columnSelect = document.getElementById("columnSelect");
+const rowSelect = document.getElementById('rowSelect');
+const menuClose = document.getElementById('menuClose');
 
-    for (let j=0; j<numRow; j++) {
-        numBoard[i].push(0);
-        const newCell = document.createElement('div');
-        newCell.classList.add('cell');
-        newCol.appendChild(newCell);
-    }
+columnSelect.onchange = function () {
+    numCol = this.value;
+}
+rowSelect.onchange = function() {
+    numRow = this.value;
+}
+menuClose.onclick = function() {
+    constructBoard();
+    updateBoard();
+    menuPopup.style.display = "none";
+}
+quitButton.onclick = function() {
+    menuPopup.style.display = "flex";
 }
 
-updateBoard();
+//this function needs to construct both the numBoard array and the screenBoard HTML. if this is the second game it needs remove the old game and reconstruct.
+function constructBoard() {
+    //remove the old numBoard and screenBoard
+    numBoard = [];
+    while (screenBoard.firstChild) {
+        screenBoard.removeChild(screenBoard.firstChild);
+    }
+    //construct numBoard and screenBoard using the numCol and numRow values
+    for (let i=0; i<numCol; i++) {
+        numBoard.push([]);
+        const newCol = document.createElement('div');
+        newCol.classList.add('column');
+        screenBoard.appendChild(newCol);
+    
+        for (let j=0; j<numRow; j++) {
+            numBoard[i].push(0);
+            const newCell = document.createElement('div');
+            newCell.classList.add('cell');
+            newCol.appendChild(newCell);
+        }
+    }
+}
 
 //this function needs to update the screenBoard to match the numBoard. update the playerDisplay to the currentPlayer
 function updateBoard() {
@@ -61,26 +88,24 @@ function playInColumn(paramCol) {
 }
 
 screenBoard.addEventListener('click', function(event) {
-    // console.log(event.target.matches('.cell'));
-
-    let clickedCol = event.target;
+    //this if statement fixes the accidental playing in column 1 at the expense of being able to click on a column in between cells
     if (event.target.matches('.cell')) {
-        clickedCol = event.target.parentElement;
-    }
+        const clickedCol = event.target.parentElement;
+        const clickedColNum = Array.from(clickedCol.parentElement.children).indexOf(clickedCol);
 
-    const numCol = Array.from(clickedCol.parentElement.children).indexOf(clickedCol);
-
-    if(playInColumn(numCol)) {
-        if (checkWin(numCol)) {
-            console.log(`Player ${currentPlayer} wins!!!`)
-        } else {
-            if (currentPlayer === 1) {
-                currentPlayer = 2;
-            } else if (currentPlayer === 2) {
-                currentPlayer = 1;
+        if(playInColumn(clickedColNum)) {
+            if (checkWin(clickedColNum)) {
+                console.log(`Player ${currentPlayer} wins!!!`)
+                menuPopup.style.display = "flex";
+            } else {
+                if (currentPlayer === 1) {
+                    currentPlayer = 2;
+                } else if (currentPlayer === 2) {
+                    currentPlayer = 1;
+                }
             }
+            updateBoard();
         }
-        updateBoard();
     }
 })
 
@@ -91,12 +116,10 @@ function checkWin(currentCol) {
     const checkPlayer = numBoard[currentCol][currentRow];
 
     //Check Down
-    console.log('checking down');
     let count = 1;
     for (let i=1; i<winLength; i++) {
         if (numBoard[currentCol][currentRow-i]===checkPlayer) {
             count++;
-            // console.log(count);
         } else {
             count = 1;
             break;
@@ -107,12 +130,10 @@ function checkWin(currentCol) {
     }
 
     //check horizontal
-    console.log('checking horizontal')
     count = 0;
     for (let i=0; i<numCol; i++) {
         if (numBoard[i][currentRow]===checkPlayer) {
             count++;
-            console.log(`Cell:${i},${currentRow} Count:${count}`);
         } else {
             count = 0;
         }
@@ -129,7 +150,6 @@ function checkWin(currentCol) {
         startCol--;
         startRow--;
     }
-    console.log(`[${startCol}][${startRow}]`)
     count = 0;
     while(startCol < numCol && startRow < numRow) {
         if (numBoard[startCol][startRow]===checkPlayer) {
@@ -149,7 +169,6 @@ function checkWin(currentCol) {
         startCol++;
         startRow--;
     }
-    console.log(`[${startCol}][${startRow}]`)
     count = 0;
     while(startCol >= 0 && startRow < numRow) {
         if (numBoard[startCol][startRow]===checkPlayer) {

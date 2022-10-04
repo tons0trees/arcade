@@ -13,8 +13,22 @@ content="IE=edge">
     <header>
         <h1>Connect4</h1>
         <h3 id="currentPlayer"></h3>
+        <button id="quitGame">Quit</button>
     </header>
-    <div id="screenBoard">
+    <div id="screenBoard"></div>
+    <div id="menuPopup">
+        <div>
+            <h2>Ready to play</h2>
+            <select id="PlayerSelect">
+                <!-- <option value="1">1 player</option> -->
+                <option value="2">2 players</option>
+            </select>
+            <label for="columnSelect">Number of columns</label>
+            <input id="columnSelect" type="range" min="4" max="15" step="1" value="7">
+            <label for="rowSelect">Number of rows</label>
+            <input id="rowSelect" type="range" min="4" max="15" step="1" value="6">
+            <button id="menuClose">Play</button>
+        </div>
     </div>
 </body>
 </html>
