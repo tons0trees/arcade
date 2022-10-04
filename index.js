@@ -81,7 +81,6 @@ function checkWin(currentCol) {
     }
 
     //check horizontal
-    //check left first, carrying count to the right check without reseting
     count = 0;
     for (let i=0; i<numCol; i++) {
         if (numBoard[i][currentRow]===checkPlayer) {
