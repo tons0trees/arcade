@@ -65,9 +65,8 @@ function checkWin(currentCol) {
     const currentRow = numBoard[currentCol].length-1;
     const checkPlayer = numBoard[currentCol][currentRow];
 
-    let count = 1;
-    
     //Check Down
+    let count = 1;
     for (let i=1; i<winLength; i++) {
         if (numBoard[currentCol][currentRow-i]===checkPlayer) {
             count++;
@@ -83,32 +82,17 @@ function checkWin(currentCol) {
 
     //check horizontal
     //check left first, carrying count to the right check without reseting
-    count = 1;
-    for (let i=1; i<winLength; i++) {
-        if (numBoard[currentCol-i][currentRow]===checkPlayer) {
+    count = 0;
+    for (let i=0; i<numCol; i++) {
+        if (numBoard[i][currentRow]===checkPlayer) {
             count++;
-            console.log(`Cell:${currentCol-i},${currentRow} Count:${count}`)
+            console.log(`Cell:${i},${currentRow} Count:${count}`);
         } else {
-            break;
+            count = 0;
         }
         if (count >= winLength) {
             return true;
         }
     }
-    console.log('checking right')
-    for (let i=1; i<winLength; i++) {
-        if (numBoard[currentCol+i][currentRow]===checkPlayer) {
-            count++;
-            console.log(`Cell:${currentCol+i},${currentRow} Count:${count}`);
-        } else {
-            break
-        }
-        if (count >= winLength) {
-            return true;
-        }
-    }
-
-    //check diagonal up
-    count = 1;
     return false;
 }
