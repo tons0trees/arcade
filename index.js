@@ -128,9 +128,35 @@ function checkWin(currentCol) {
     }
     console.log(`[${startCol}][${startRow}]`)
     count = 0;
+    while(startCol < numCol && startRow < numRow) {
+        if (numBoard[startCol][startRow]===checkPlayer) {
+            count++;
+        } else {
+            count = 0;
+        }
+        if (count >= winLength) return true
+        startCol++;
+        startRow++;
+    }
 
-    for (let i=0; i<numCol; i++) {
-
+    //Check diagonal down
+    startCol = currentCol;
+    startRow = currentRow;
+    while (startCol < numCol-1 && startRow > 0) {
+        startCol++;
+        startRow--;
+    }
+    console.log(`[${startCol}][${startRow}]`)
+    count = 0;
+    while(startCol >= 0 && startRow < numRow) {
+        if (numBoard[startCol][startRow]===checkPlayer) {
+            count++;
+        } else {
+            count = 0;
+        }
+        if (count >= winLength) return true
+        startCol--;
+        startRow++;
     }
     return false;
 }
