@@ -3,7 +3,7 @@ let numBoard = [];
 let numCol = 7;
 let numRow = 6;
 const winLength = 4;
-let numberOfPlayers = 2;
+let numPlayers = 2;
 let currentPlayer = 1;
 let playerNames = ['This space left intentionally blank', 'Player 1', 'Player 2'];
 
@@ -26,8 +26,8 @@ rowSelect.onchange = function() {
     numRow = this.value;
 }
 menuClose.onclick = function() {
-    numberOfPlayers = Number(playerSelect.value);
-    if (numberOfPlayers === 1) {
+    numPlayers = Number(playerSelect.value);
+    if (numPlayers === 1) {
         playerNames[1] = player1NameField.value;
         playerNames[2] = 'Computer';
     } else {
@@ -133,6 +133,11 @@ screenBoard.addEventListener('click', function(event) {
                 menuPopup.childNodes[1].childNodes[1].innerText = `${playerNames[currentPlayer]} Wins!!!`;
                 menuPopup.style.display = "flex";
             } else {
+                if (numPlayers === 1) {
+                    switchPlayer();
+                    updateBoard();
+                    playInColumn(computerCol());
+                }
                 switchPlayer();
             }
             updateBoard();
@@ -212,4 +217,13 @@ function checkWin(passedBoard, currentCol) {
         startRow++;
     }
     return false;
+}
+
+//this function chooses a column for the computer to play in. starting with a random choice.
+function computerCol() {
+    let pick = Math.floor(Math.random()*numCol);
+    while (numBoard[pick].indexOf(0)<0) {
+        pick = Math.floor(Math.random()*numCol);
+    }
+    return pick;
 }
