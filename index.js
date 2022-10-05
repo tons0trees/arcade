@@ -101,6 +101,27 @@ function playInColumn(paramCol) {
     }
 }
 
+//this function should switch the player to a specified player, or toggle the player if nothing is specified
+function switchPlayer(input) {
+    switch (input) {
+        case undefined: 
+            if (currentPlayer === 1) {
+                currentPlayer = 2;
+            } else if (currentPlayer === 2) {
+                currentPlayer = 1;
+            }
+            return true;
+        case 1: 
+            currentPlayer = 1;
+            return true;
+        case 2: 
+            currentPlayer = 2;
+            return true;
+        default:
+            return false;
+    }
+}
+
 screenBoard.addEventListener('click', function(event) {
     //this if statement fixes the accidental playing in column 1 at the expense of being able to click on a column in between cells
     if (event.target.matches('.cell')) {
@@ -112,11 +133,7 @@ screenBoard.addEventListener('click', function(event) {
                 menuPopup.childNodes[1].childNodes[1].innerText = `${playerNames[currentPlayer]} Wins!!!`;
                 menuPopup.style.display = "flex";
             } else {
-                if (currentPlayer === 1) {
-                    currentPlayer = 2;
-                } else if (currentPlayer === 2) {
-                    currentPlayer = 1;
-                }
+                switchPlayer();
             }
             updateBoard();
         }
