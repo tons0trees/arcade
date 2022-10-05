@@ -3,15 +3,21 @@ let numBoard = [];
 let numCol = 7;
 let numRow = 6;
 const winLength = 4;
+let numberOfPlayers = 2;
 let currentPlayer = 1;
+let playerNames = ['This space left intentionally blank', 'Player 1', 'Player 2'];
 
 const screenBoard = document.getElementById("screenBoard");
 const playerDisplay = document.getElementById("currentPlayer");
 const quitButton = document.getElementById('quitGame')
 const menuPopup = document.getElementById('menuPopup');
+const playerSelect = document.getElementById('playerSelect')
+const player1NameField = document.getElementById('player1Name')
+const player2NameField = document.getElementById('player2Name')
 const columnSelect = document.getElementById("columnSelect");
 const rowSelect = document.getElementById('rowSelect');
 const menuClose = document.getElementById('menuClose');
+
 
 columnSelect.onchange = function () {
     numCol = this.value;
@@ -20,6 +26,14 @@ rowSelect.onchange = function() {
     numRow = this.value;
 }
 menuClose.onclick = function() {
+    numberOfPlayers = Number(playerSelect.value);
+    if (numberOfPlayers === 1) {
+        playerNames[1] = player1NameField.value;
+        playerNames[2] = 'Computer';
+    } else {
+        playerNames[1] = player1NameField.value;
+        playerNames[2] = player2NameField.value;
+    }
     constructBoard();
     updateBoard();
     menuPopup.style.display = "none";
@@ -67,7 +81,7 @@ function updateBoard() {
         }
     }
 
-    playerDisplay.innerText = `Player ${currentPlayer}`
+    playerDisplay.innerText = playerNames[currentPlayer];
     if (currentPlayer===1) {
         playerDisplay.style.color = 'red';
     } else if (currentPlayer === 2) {
@@ -94,8 +108,8 @@ screenBoard.addEventListener('click', function(event) {
         const clickedColNum = Array.from(clickedCol.parentElement.children).indexOf(clickedCol);
 
         if(playInColumn(clickedColNum)) {
-            if (checkWin(clickedColNum)) {
-                console.log(`Player ${currentPlayer} wins!!!`)
+            if (checkWin(numBoard, clickedColNum)) {
+                menuPopup.childNodes[1].childNodes[1].innerText = `${playerNames[currentPlayer]} Wins!!!`;
                 menuPopup.style.display = "flex";
             } else {
                 if (currentPlayer === 1) {
@@ -110,15 +124,15 @@ screenBoard.addEventListener('click', function(event) {
 })
 
 //The win function takes the column that was last played in and checks if that token won the game.
-function checkWin(currentCol) {
-    let currentRow = numBoard[currentCol].indexOf(0)-1;
-    if (currentRow<0) currentRow=numBoard[currentCol].length-1
-    const checkPlayer = numBoard[currentCol][currentRow];
+function checkWin(passedBoard, currentCol) {
+    let currentRow = passedBoard[currentCol].indexOf(0)-1;
+    if (currentRow<0) currentRow=passedBoard[currentCol].length-1
+    const checkPlayer = passedBoard[currentCol][currentRow];
 
     //Check Down
     let count = 1;
     for (let i=1; i<winLength; i++) {
-        if (numBoard[currentCol][currentRow-i]===checkPlayer) {
+        if (passedBoard[currentCol][currentRow-i]===checkPlayer) {
             count++;
         } else {
             count = 1;
@@ -132,7 +146,7 @@ function checkWin(currentCol) {
     //check horizontal
     count = 0;
     for (let i=0; i<numCol; i++) {
-        if (numBoard[i][currentRow]===checkPlayer) {
+        if (passedBoard[i][currentRow]===checkPlayer) {
             count++;
         } else {
             count = 0;
@@ -152,7 +166,7 @@ function checkWin(currentCol) {
     }
     count = 0;
     while(startCol < numCol && startRow < numRow) {
-        if (numBoard[startCol][startRow]===checkPlayer) {
+        if (passedBoard[startCol][startRow]===checkPlayer) {
             count++;
         } else {
             count = 0;
@@ -171,7 +185,7 @@ function checkWin(currentCol) {
     }
     count = 0;
     while(startCol >= 0 && startRow < numRow) {
-        if (numBoard[startCol][startRow]===checkPlayer) {
+        if (passedBoard[startCol][startRow]===checkPlayer) {
             count++;
         } else {
             count = 0;

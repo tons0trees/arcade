@@ -17,12 +17,16 @@ content="IE=edge">
     </header>
     <div id="screenBoard"></div>
     <div id="menuPopup">
-        <div>
+        <div id="menuInternal">
             <h2>Ready to play</h2>
-            <select id="PlayerSelect">
-                <!-- <option value="1">1 player</option> -->
-                <option value="2">2 players</option>
+            <select id="playerSelect">
+                <option value="1">1 player</option>
+                <option value="2" selected="selected">2 Players</option>
             </select>
+            <div class="nameContainer">
+                <input type="text" id="player1Name" maxlength="12" size="15" value="Player 1">
+                <input type="text" id="player2Name" maxlength="12" size="15" value="Player 2">
+            </div>
             <label for="columnSelect">Number of columns</label>
             <input id="columnSelect" type="range" min="4" max="15" step="1" value="7">
             <label for="rowSelect">Number of rows</label>
