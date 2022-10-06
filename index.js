@@ -35,6 +35,12 @@ menuClose.onclick = function() {
         playerNames[2] = player2NameField.value;
     }
     constructBoard();
+    currentPlayer = Math.floor(Math.random()*2)+1;
+    if (numPlayers === 1 && currentPlayer === 2) {
+        playInColumn(computerCol());
+        switchPlayer();
+    }
+
     updateBoard();
     menuPopup.style.display = "none";
 }
@@ -132,15 +138,29 @@ screenBoard.addEventListener('click', function(event) {
             if (checkWin(numBoard, clickedColNum)) {
                 menuPopup.childNodes[1].childNodes[1].innerText = `${playerNames[currentPlayer]} Wins!!!`;
                 menuPopup.style.display = "flex";
+                updateBoard();
             } else {
                 if (numPlayers === 1) {
                     switchPlayer();
                     updateBoard();
-                    playInColumn(computerCol());
+                    setTimeout(function() {
+                        let computerMove = computerCol();
+                        playInColumn(computerMove);
+                        if (checkWin(numBoard,computerMove)) {
+                            menuPopup.childNodes[1].childNodes[1].innerText = `${playerNames[currentPlayer]} Wins!!!`;
+                            menuPopup.style.display = "flex";
+                            switchPlayer();
+                            updateBoard();
+                        } else {
+                            switchPlayer();
+                            updateBoard();
+                        }
+                    }, 1000)
+                } else {
+                    switchPlayer();
+                    updateBoard();
                 }
-                switchPlayer();
             }
-            updateBoard();
         }
     }
 })
