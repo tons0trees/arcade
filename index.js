@@ -24,9 +24,11 @@ const menuClose = document.getElementById("menuClose");
 
 columnSelect.onchange = function () {
     numCol = this.value;
+    this.labels[0].innerText = 'Number of Columns: '+this.value;
 };
 rowSelect.onchange = function () {
     numRow = this.value;
+    this.labels[0].innerText = 'Number of Rows: '+this.value;
 };
 menuClose.onclick = function () {
     numPlayers = Number(playerSelect.value);
