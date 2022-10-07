@@ -2,7 +2,7 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items: baseline;
+    align-items: center;
 }
 
 button {

@@ -6,7 +6,7 @@ const winLength = 4;
 let numPlayers = 2;
 let currentPlayer = 1;
 let playerNames = [
-    "This space left intentionally blank",
+    "This space intentionally left blank",
     "Player 1",
     "Player 2",
 ];
@@ -42,7 +42,7 @@ menuClose.onclick = function () {
     constructBoard();
     currentPlayer = Math.floor(Math.random() * 2) + 1;
     if (numPlayers === 1 && currentPlayer === 2) {
-        playInColumn(computerCol());
+        playInColumn(numBoard, computerCol(), currentPlayer);
         switchPlayer();
     }
 
@@ -76,7 +76,7 @@ function constructBoard() {
     }
 }
 
-//this function needs to update the screenBoard to match the numBoard. update the playerDisplay to the currentPlayer
+//this function needs to update the screenBoard to match the numBoard. also update the playerDisplay to the currentPlayer
 function updateBoard() {
     for (let col = 0; col < numCol; col++) {
         for (let row = 0; row < numRow; row++) {
@@ -107,10 +107,12 @@ function updateBoard() {
     }
 }
 
-function playInColumn(passedBoard,paramCol) {
+//this function takes a column and attempts to play in that column as the currentPlayer. It modifies the board array and returns true if the play was successful. If the passed column could not be played in the function returns false and the board array is not changed.
+//to enable the computer to check hypothetical moves and board states, the function now takes a board array and player as parameters
+function playInColumn(passedBoard, paramCol, paramPlayer) {
     const height = passedBoard[paramCol].indexOf(0);
     if (height >= 0) {
-        passedBoard[paramCol][height] = currentPlayer;
+        passedBoard[paramCol][height] = paramPlayer;
         return true;
     } else {
         return false;
@@ -146,7 +148,7 @@ screenBoard.addEventListener("click", function (event) {
             clickedCol.parentElement.children
         ).indexOf(clickedCol);
 
-        if (playInColumn(numBoard, clickedColNum)) {
+        if (playInColumn(numBoard, clickedColNum, currentPlayer)) {
             if (checkWin(numBoard, clickedColNum)) {
                 menuPopup.childNodes[1].childNodes[1].innerText = `${playerNames[currentPlayer]} Wins!!!`;
                 menuPopup.style.display = "flex";
@@ -157,7 +159,7 @@ screenBoard.addEventListener("click", function (event) {
                     updateBoard();
 
                     let computerMove = computerCol();
-                    playInColumn(numBoard,computerMove);
+                    playInColumn(numBoard, computerMove, currentPlayer);
                     if (checkWin(numBoard, computerMove)) {
                         menuPopup.childNodes[1].childNodes[1].innerText = `${playerNames[currentPlayer]} Wins!!!`;
                         menuPopup.style.display = "flex";
@@ -176,7 +178,7 @@ screenBoard.addEventListener("click", function (event) {
     }
 });
 
-//The win function takes the column that was last played in and checks if that token won the game.
+//The win function takes the column that was last played in and checks if that token won the game. To enable the computer to checkWin on a hypothetical future board, checkWin now takes a array representing a board.
 function checkWin(passedBoard, currentCol) {
     let currentRow = passedBoard[currentCol].indexOf(0) - 1;
     if (currentRow < 0) currentRow = passedBoard[currentCol].length - 1;
@@ -258,7 +260,7 @@ function computerCol() {
         for (let col of numBoard) {
             copy.push([...col])
         }
-        playInColumn(copy, i);
+        playInColumn(copy, i, 2);
         if (checkWin(copy, i)) {
             return i;
         }
