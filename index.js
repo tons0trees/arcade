@@ -78,6 +78,7 @@ function constructBoard() {
 
 //this function needs to update the screenBoard to match the numBoard. also update the playerDisplay to the currentPlayer
 function updateBoard() {
+    screenBoard.style.backgroundColor = '#FFE135'
     for (let col = 0; col < numCol; col++) {
         for (let row = 0; row < numRow; row++) {
             if (numBoard[col][row]) {
@@ -141,12 +142,15 @@ function switchPlayer(input) {
 }
 
 screenBoard.addEventListener("click", function (event) {
-    //this if statement fixes the accidental playing in column 1 at the expense of being able to click on a column in between cells
-    if (event.target.matches(".cell")) {
-        const clickedCol = event.target.parentElement;
-        const clickedColNum = Array.from(
-            clickedCol.parentElement.children
-        ).indexOf(clickedCol);
+    //lots of the initial if statements here are so the user can click on either a cell or the space between a cell
+    if (event.target.matches(".cell") || event.target.matches('.column')) {
+        let clickedCol = {};
+        if (event.target.matches(".cell")) {
+            clickedCol = event.target.parentElement;
+        } else {
+            clickedCol = event.target;
+        }
+        const clickedColNum = Array.from(clickedCol.parentElement.children).indexOf(clickedCol);
 
         if (playInColumn(numBoard, clickedColNum, currentPlayer)) {
             if (checkWin(numBoard, clickedColNum)) {
