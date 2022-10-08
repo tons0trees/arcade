@@ -34,7 +34,7 @@ main {
     flex-direction: column-reverse;
 }
 .column:hover {
-    background-color: lightblue;
+    background-color: lightgoldenrodyellow;
     border-radius: 10px;
 }
 
